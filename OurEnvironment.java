@@ -1,3 +1,4 @@
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -658,59 +659,60 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 		return projectList.get(prj).getLarge();
 	}
 	
-	public static void printPredicates()
+	public static void printPredicates(PrintWriter pw)
 	{
 		for (Person psn : peopleList.values())
 		{
-			System.out.println("person("+psn.getName()+")");
+			
+			pw.println("person("+psn.getName()+")");
 			if (psn.getHacker())
-				System.out.println("hacker("+psn.getName()+")");
+				pw.println("hacker("+psn.getName()+")");
 			if (psn.getManager())
-				System.out.println("manager("+psn.getName()+")");
+				pw.println("manager("+psn.getName()+")");
 			if (psn.getResearcher())
-				System.out.println("researcher("+psn.getName()+")");
+				pw.println("researcher("+psn.getName()+")");
 			if (psn.getSecretary())
-				System.out.println("secretary("+psn.getName()+")");
+				pw.println("secretary("+psn.getName()+")");
 			if (psn.getSmoker())
-				System.out.println("smoker("+psn.getName()+")");
+				pw.println("smoker("+psn.getName()+")");
 			
 			for (Project prj : psn.getProjectsList())
-				System.out.println("project("+psn.getName()+", "+prj.getName()+")");
+				pw.println("project("+psn.getName()+", "+prj.getName()+")");
 			
 			for (Project prj : psn.getProjectHead())
-				System.out.println("heads-project("+psn.getName()+", "+prj.getName()+")");
+				pw.println("heads-project("+psn.getName()+", "+prj.getName()+")");
 			
 			for (Grp group : psn.getGroupsList())
-				System.out.println("group("+psn.getName()+", "+group.getName()+")");
+				pw.println("group("+psn.getName()+", "+group.getName()+")");
 			
 			for (Grp group : psn.getGroupHeadList())
-				System.out.println("heads-group("+psn.getName()+", "+group.getName()+")");
+				pw.println("heads-group("+psn.getName()+", "+group.getName()+")");
 			
 			if (psn.getRoom()!= null)
-				System.out.println("assigned-to("+psn.getName()+", "+psn.getRoom().getName()+")");
+				pw.println("assigned-to("+psn.getName()+", "+psn.getRoom().getName()+")");
 			
 			for (Person psn2 : psn.getWorksWith())
-				System.out.println("works-with("+psn.getName()+", "+psn2.getName()+")");
+				pw.println("works-with("+psn.getName()+", "+psn2.getName()+")");
 		}
 		
 		for (Room room : roomList.values())
 		{
-			System.out.println("room("+room.getName()+")");
-			System.out.println(room.getRoomSize()+"-room("+room.getName()+")");
+			pw.println("room("+room.getName()+")");
+			pw.println(room.getRoomSize()+"-room("+room.getName()+")");
 			
 			for (Room room2 : room.getCloseRooms())
-				System.out.println("close("+room.getName()+", "+room2.getName()+")");
+				pw.println("close("+room.getName()+", "+room2.getName()+")");
 			
 		}
 		
 		for (Grp group : groupList.values())
-			System.out.println("group("+group.getName()+")");
+			pw.println("group("+group.getName()+")");
 		
 		for (Project prj : projectList.values())
 		{
-			System.out.println("project("+prj.getName()+")");
+			pw.println("project("+prj.getName()+")");
 			if (prj.getLarge())
-				System.out.println("large-project("+prj.getName()+")");
+				pw.println("large-project("+prj.getName()+")");
 		}
 	}
 }
