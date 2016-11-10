@@ -3,10 +3,10 @@ import java.util.HashSet;
 
 public class Project {
 
-	public String name;
-	public boolean large;
-	public HashSet<Person> heads;
-	public HashSet<Person> projectMembers;
+	private String name;
+	private boolean large;
+	private HashSet<Person> heads;
+	private HashSet<Person> projectMembers;
 	
 	
 	public Project(String name)
@@ -15,6 +15,11 @@ public class Project {
 		this.large = false;
 		this.heads = new HashSet<Person>();
 		this.projectMembers = new HashSet<Person>();
+	}
+	
+	public String getName()
+	{
+		return this.name;
 	}
 	
 	public HashSet<Person> getProjectMembers()
@@ -34,4 +39,13 @@ public class Project {
 		return this.heads;
 	}
 
+	public void setLarge(boolean islarge)
+	{
+		this.large = islarge;
+	}
+	
+	public boolean getLarge()
+	{
+		return this.large;
+	}
 }

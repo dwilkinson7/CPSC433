@@ -15,6 +15,11 @@ public class Grp {
 		this.heads = new HashSet<Person>();
 	}
 	
+	public String getName()
+	{
+		return this.name;
+	}
+	
 	public HashSet<Person> getGroupMembers()
 	{
 		return this.groupMembers;

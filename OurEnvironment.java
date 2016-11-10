@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -10,12 +9,10 @@ import cpsc433.SisyphusPredicates;
 public class OurEnvironment extends Environment implements SisyphusPredicates {
 
 	private static OurEnvironment instance=null;
-	private static HashMap<String,Person> peopleList = new HashMap<String,Person>();
-	private static HashMap<String,Grp> groupList = new HashMap<String,Grp>();
-	private static HashMap<String,Project> projectList = new HashMap<String,Project>();
-	
-	private static ArrayList<String> roomNameList = new ArrayList<String>();
-	private static ArrayList<Room> roomList = new ArrayList<Room>();
+	public static HashMap<String,Person> peopleList = new HashMap<String,Person>();
+	public static HashMap<String,Grp> groupList = new HashMap<String,Grp>();
+	public static HashMap<String,Project> projectList = new HashMap<String,Project>();
+	public static HashMap<String,Room> roomList = new HashMap<String,Room>();
 	
 	
 	protected OurEnvironment(String name) {
@@ -388,14 +385,17 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 
 	@Override
 	public boolean e_works_with(String p, TreeSet<Pair<ParamType, Object>> p2s) {
-		for (int i = 0; i<peopleList.size(); i++)
+		
+		for (Pair<ParamType, Object> pair : p2s)
 		{
-			if (peopleList.get(i).getName().equals(p))
-			{
-				return peopleList.get(i).getWorksWith().equals(p2s);
-			}
+			String personName = (String)pair.getValue();
+			if (peopleList.get(p).getWorksWith().contains(peopleList.get(personName)))
+				;
+			else
+				return false;
 		}
-		return false;
+		
+		return true;
 	}
 
 	@Override
@@ -439,114 +439,103 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 
 	@Override
 	public void a_assign_to(String p, String room) throws Exception {
-		if(peopleNameList.contains(p)){
-			for(int i = 0; i < peopleList.size(); i++){
-				if(peopleList.get(i).getName().equals(p)){
-					for (int j = 0; j < roomList.size(); j++){
-						if(roomList.get(j).getName().equals(room)){
-							roomList.get(j).assign(peopleList.get(i));
-							break;
-						}
-					}
-				}
+		// If person already exists
+		if (peopleList.containsKey(p)){
+			// if person already has room
+			if (peopleList.get(p).getRoom() != null)
+			{
+				peopleList.get(p).getRoom().removePerson(peopleList.get(p));
 			}
-		} else {
-			Person newPerson = new Person(p);
-			for(int i = 0; i < peopleList.size(); i++){
-				if(roomList.get(i).getName().equals(room)){
-					roomList.get(i).assign(newPerson);
-				}
+			//if room already exists
+			if (roomList.containsKey(room)){
+				peopleList.get(p).setRoom(roomList.get(room));
+				roomList.get(room).assignPerson(peopleList.get(p));
 			}
-			peopleList.add(newPerson);
-			peopleNameList.add(p);
+			// if room doesnt exist
+			else
+			{
+				Room newRoom = new Room(room);
+				roomList.put(room, newRoom);
+				newRoom.assignPerson(peopleList.get(p));
+				peopleList.get(p).setRoom(newRoom);
+			}
 		}
-		if (!roomNameList.contains(room))
+		// If person doesnt exist
+		else
 		{
-			Room newRoom = new Room(room);
-			roomList.add(newRoom);
-			roomNameList.add(room);
-			for(int i = 0; i < peopleList.size(); i++){
-				if(peopleList.get(i).getName().equals(p)){
-					newRoom.assign(peopleList.get(i));
-				}
+			Person newPerson = new Person(p);
+			peopleList.put(p, newPerson);
+			// If room exists
+			if (roomList.containsKey(room))
+			{
+				newPerson.setRoom(roomList.get(room));
+				roomList.get(room).assignPerson(newPerson);
+			}
+			// room doesnt exist
+			else
+			{
+				Room newRoom = new Room(room);
+				roomList.put(room, newRoom);
+				newRoom.assignPerson(newPerson);
+				newPerson.setRoom(newRoom);
 			}
 		}
 	}
 
 	@Override
 	public boolean e_assign_to(String p, String room) {
-		if(peopleNameList.contains(p) && roomNameList.contains(room)){
-			for(int i = 0; i < roomList.size(); i++){
-				if(roomList.get(i).getName().equals(room)){
-							return roomList.get(i).isAssigned(p);
-						}
-					}
-				}
-			
-		return false;
+		if (peopleList.get(p).getRoom().equals(roomList.get(room)))
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public void a_room(String r) {
-		if (!roomNameList.contains(r)){
+		if (!roomList.containsKey(r))
+		{
 			Room newRoom = new Room(r);
-			roomList.add(newRoom);
-			roomNameList.add(r);
+			roomList.put(r, newRoom);
 		}
 
 	}
 
 	@Override
 	public boolean e_room(String r) {
-		return roomNameList.contains(r);
+		return roomList.containsKey(r);
 	}
 
 	@Override
 	public void a_close(String room, String room2) {
-
-		if (roomNameList.contains(room)){
-			for (int i = 0; i < roomList.size(); i++){
-				if (roomList.get(i).getName().equals(room)){
-					roomList.get(i).setClose(room2);
-					break;
-				}
-			}
+		Room newRoom1, newRoom2;
+		// check if rooms exist, if not create
+		if (!roomList.containsKey(room))
+		{
+			newRoom1 = new Room(room);
+			roomList.put(room, newRoom1);
 		}
-		//If the first room doesn't exists
-		else{
-			Room newRoom = new Room(room);
-			newRoom.setClose(room2);
-			roomList.add(newRoom);
-			roomNameList.add(room);
+		else
+			newRoom1 = roomList.get(room);
+		if (!roomList.containsKey(room2))
+		{
+			newRoom2 = new Room(room2);
+			roomList.put(room2, newRoom2);
 		}
-		//Check to see if the second room exists.
-		if (roomNameList.contains(room2)){
-			for (int i = 0; i < roomList.size(); i++){
-				if (roomList.get(i).getName().equals(room2)){
-					roomList.get(i).setClose(room);
-					break;
-				}
-			}
-		}
-		else{
-			Room newRoom = new Room(room2);
-			newRoom.setClose(room);
-			roomList.add(newRoom);
-			roomNameList.add(room2);
-		}
-
+		else
+			newRoom2 = roomList.get(room2);
+		// Assign closeness of rooms
+		newRoom1.assignClose(newRoom2);
+		newRoom2.assignClose(newRoom1);
 	}
 
 	@Override
 	public boolean e_close(String room, String room2) {
-		if (roomNameList.contains(room)){
-			for (int i = 0; i < roomList.size(); i++){
-				if (roomList.get(i).getName().equals(room)){
-					return roomList.get(i).getClose().contains(room2);
-				}
-			}
-		}
-		return false;
+		
+		if (roomList.get(room).getCloseRooms().contains(roomList.get(room2)))
+			return true;
+		else
+			return false;
+	
 	}
 
 	@Override
@@ -560,154 +549,168 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 
 	@Override
 	public boolean e_close(String room, TreeSet<Pair<ParamType, Object>> set) {
-		for (Pair<ParamType, Object> pair : set) {
-			String room2 = (String) pair.getValue();
-			if (e_close(room, room2) == true)
-				return true;
+		for (Pair<ParamType, Object> pair : set)
+		{
+			String roomName = (String)pair.getValue();
+			if (roomList.get(room).getCloseRooms().contains(roomList.get(roomName)))
+				;
+			else
+				return false;
 		}
-		return false;
+		
+		return true;
 	}
 
 	@Override
 	public void a_large_room(String r) {
-		if (roomNameList.contains(r)){
-			for (int i = 0; i < roomList.size(); i++){
-				if (roomList.get(i).getName().equals(r)){
-					roomList.get(i).setSize("large");
-					break;
-				}
-			}
-		}
-		else{
+		if (!roomList.containsKey(r))
+		{
 			Room newRoom = new Room(r);
-			newRoom.setSize("large");
-			roomList.add(newRoom);
-			roomNameList.add(r);
+			roomList.put(r, newRoom);
 		}
-
+		roomList.get(r).setRoomSize("large");
 	}
 
 	@Override
 	public boolean e_large_room(String r) {
-		for (int i = 0; i<roomList.size(); i++){
-			if (roomList.get(i).getName().equals(r)){
-				return roomList.get(i).getSize().equals("large");
-			}
-		}
-		return false;
+		if (roomList.get(r).getRoomSize().equals("large"))
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public void a_medium_room(String r) {
-		if (roomNameList.contains(r)){
-			for (int i = 0; i < roomList.size(); i++){
-				if (roomList.get(i).getName().equals(r)){
-					roomList.get(i).setSize("medium");
-					break;
-				}
-			}
-		}
-		else{
+		if (!roomList.containsKey(r))
+		{
 			Room newRoom = new Room(r);
-			newRoom.setSize("medium");
-			roomList.add(newRoom);
-			roomNameList.add(r);
+			roomList.put(r, newRoom);
 		}
-
+		roomList.get(r).setRoomSize("medium");
 	}
 
 	@Override
 	public boolean e_medium_room(String r) {
-		for (int i = 0; i<roomList.size(); i++){
-			if (roomList.get(i).getName().equals(r)){
-				return roomList.get(i).getSize().equals("medium");
-			}
-		}
-		return false;
+		if (roomList.get(r).getRoomSize().equals("medium"))
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public void a_small_room(String r) {
-		if (roomNameList.contains(r)){
-			for (int i = 0; i < roomList.size(); i++){
-				if (roomList.get(i).getName().equals(r)){
-					roomList.get(i).setSize("small");
-					break;
-				}
-			}
-		}
-		else{
+		if (!roomList.containsKey(r))
+		{
 			Room newRoom = new Room(r);
-			newRoom.setSize("small");
-			roomList.add(newRoom);
-			roomNameList.add(r);
+			roomList.put(r, newRoom);
 		}
-
+		roomList.get(r).setRoomSize("small");
 	}
 
 	@Override
 	public boolean e_small_room(String r) {
-		for (int i = 0; i<roomList.size(); i++){
-			if (roomList.get(i).getName().equals(r)){
-				return roomList.get(i).getSize().equals("small");
-			}
-		}
-		return false;
+		if (roomList.get(r).getRoomSize().equals("small"))
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public void a_group(String g) {
-		if(!groupNameList.contains(g)){
+		if(!groupList.containsKey(g)){
 			Grp newGroup = new Grp(g);
-			groupList.add(newGroup);
-			groupNameList.add(g);
+			groupList.put(g,newGroup);
 		}
 	}
 
 	@Override
 	public boolean e_group(String g) {
-		return groupNameList.contains(g);
+		return groupList.containsKey(g);
 	}
 
 	@Override
 	public void a_project(String p) {
-		if(!projectNameList.contains(p)){
+		if(!projectList.containsKey(p)){
 			Project newProject = new Project(p);
-			projectList.add(newProject);
-			projectNameList.add(p);
+			projectList.put(p,newProject);
 		}
 	}
 
 	@Override
 	public boolean e_project(String p) {
-		return projectNameList.contains(p);
+		return projectList.containsKey(p);
 	}
 
 	@Override
 	public void a_large_project(String prj) {
-		if (projectNameList.contains(prj)){
-			for (int i = 0; i < projectList.size(); i++){
-				if (projectList.get(i).getName().equals(prj)){
-					projectList.get(i).setLargeProject(true);
-					break;
-				}
-			}
+		
+		if (!projectList.containsKey(prj))
+		{
+			Project newProject = new Project(prj);
+			projectList.put(prj, newProject);
 		}
-		else{
-			Project newProject= new Project(prj);
-			newProject.setLargeProject(true);
-			projectList.add(newProject);
-			projectNameList.add(prj);
-		}
-
+		projectList.get(prj).setLarge(true);
+	
 	}
 
 	@Override
 	public boolean e_large_project(String prj) {
-		for (int i = 0; i < projectList.size(); i++){
-			if (projectList.get(i).getName().equals(prj))
-				return projectList.get(i).getLargeProject();
+		return projectList.get(prj).getLarge();
+	}
+	
+	public static void printPredicates()
+	{
+		for (Person psn : peopleList.values())
+		{
+			System.out.println("person("+psn.getName()+")");
+			if (psn.getHacker())
+				System.out.println("hacker("+psn.getName()+")");
+			if (psn.getManager())
+				System.out.println("manager("+psn.getName()+")");
+			if (psn.getResearcher())
+				System.out.println("researcher("+psn.getName()+")");
+			if (psn.getSecretary())
+				System.out.println("secretary("+psn.getName()+")");
+			if (psn.getSmoker())
+				System.out.println("smoker("+psn.getName()+")");
+			
+			for (Project prj : psn.getProjectsList())
+				System.out.println("project("+psn.getName()+", "+prj.getName()+")");
+			
+			for (Project prj : psn.getProjectHead())
+				System.out.println("heads-project("+psn.getName()+", "+prj.getName()+")");
+			
+			for (Grp group : psn.getGroupsList())
+				System.out.println("group("+psn.getName()+", "+group.getName()+")");
+			
+			for (Grp group : psn.getGroupHeadList())
+				System.out.println("heads-group("+psn.getName()+", "+group.getName()+")");
+			
+			if (psn.getRoom()!= null)
+				System.out.println("assigned-to("+psn.getName()+", "+psn.getRoom().getName()+")");
+			
+			for (Person psn2 : psn.getWorksWith())
+				System.out.println("works-with("+psn.getName()+", "+psn2.getName()+")");
 		}
-		return false;
+		
+		for (Room room : roomList.values())
+		{
+			System.out.println("room("+room.getName()+")");
+			System.out.println(room.getRoomSize()+"-room("+room.getName()+")");
+			
+			for (Room room2 : room.getCloseRooms())
+				System.out.println("close("+room.getName()+", "+room2.getName()+")");
+			
+		}
+		
+		for (Grp group : groupList.values())
+			System.out.println("group("+group.getName()+")");
+		
+		for (Project prj : projectList.values())
+		{
+			System.out.println("project("+prj.getName()+")");
+			if (prj.getLarge())
+				System.out.println("large-project("+prj.getName()+")");
+		}
 	}
 }

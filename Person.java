@@ -10,11 +10,11 @@ public class Person {
 		private boolean manager;
 		private boolean smoker;
 		private boolean hacker;
-		private HashSet<Project> projects = new HashSet<Project>();
-		private HashSet<Person> worksWith = new HashSet<Person>();
-		private HashSet<Grp> headgroup = new HashSet<Grp>();
-		private HashSet<Project> headproject = new HashSet<Project>();
-		private HashSet<Grp> groups = new HashSet<Grp>();
+		private HashSet<Project> projects;
+		private HashSet<Person> worksWith;
+		private HashSet<Grp> headgroup;
+		private HashSet<Project> headproject;
+		private HashSet<Grp> groups;
 		private Room room;
 		
 		public Person(String p) {
@@ -24,7 +24,12 @@ public class Person {
 			manager = false;
 			smoker = false;
 			hacker = false;
-			worksWith = null;
+			projects = new HashSet<Project>();
+			worksWith = new HashSet<Person>();
+			headgroup = new HashSet<Grp>();
+			headproject = new HashSet<Project>();
+			groups = new HashSet<Grp>();
+			
 		}
 
 		public String getName(){

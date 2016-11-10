@@ -14,6 +14,7 @@ public class MainSisyphus extends SisyphusI {
 	
 	public static void main(String[] args) {
 		new MainSisyphus(args);
+		OurEnvironment.printPredicates();
 	}
 	
 }
