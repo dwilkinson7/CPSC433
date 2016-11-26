@@ -1,12 +1,13 @@
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Stack;
+import java.util.Timer;
 
 import cpsc433.Environment;
 import cpsc433.SisyphusI;
 
 public class MainSisyphus extends SisyphusI {
-
+ 		
 	public MainSisyphus(String[] args) {
 		super(args);
 	}
@@ -17,7 +18,11 @@ public class MainSisyphus extends SisyphusI {
 	}
 	
 	public static void main(String[] args) {
-		new MainSisyphus(args);
+		MainSisyphus ms = new MainSisyphus(args);
+		
+		Timer myTimer = new Timer(true);
+		myTimer.schedule(new TimeLimit(),1000); // TODO: change time to arg value
+		
 		PrintWriter pw;
 		try {
 			pw = new PrintWriter(args[0]+".out");
@@ -28,6 +33,19 @@ public class MainSisyphus extends SisyphusI {
 			e.printStackTrace();
 		}
 		
+		
+		
+	}
+	
+	private static void doOrTree(OurEnvironment ourEnv)
+	{
+		// Get people and room lists
+		// Create ordered people stack by group
+		// Create room hashset
+		// Create TreeNode root
+		// processNode(root)
+		
+		//
 		
 		
 	}

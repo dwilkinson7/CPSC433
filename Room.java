@@ -16,6 +16,10 @@ public class Room {
 		size = "medium";
 	}
 	
+	public boolean isFull()
+	{
+		return this.full;
+	}
 	public String getName()
 	{
 		return this.name;
@@ -51,5 +55,10 @@ public class Room {
 	public String getRoomSize()
 	{
 		return this.size;
+	}
+	
+	public ArrayList<Person> getAssigned()
+	{
+		return this.assigned;
 	}
 }
