@@ -1,5 +1,6 @@
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.TreeSet;
 
 import cpsc433.Environment;
@@ -14,6 +15,7 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 	public static HashMap<String,Grp> groupList = new HashMap<String,Grp>();
 	public static HashMap<String,Project> projectList = new HashMap<String,Project>();
 	public static HashMap<String,Room> roomList = new HashMap<String,Room>();
+	public static HashSet<Person> preAssigned = new HashSet<Person>(); 
 	
 	
 	protected OurEnvironment(String name) {
@@ -507,6 +509,7 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 				newPerson.setRoom(newRoom);
 			}
 		}
+		this.preAssigned.add(peopleList.get(p));
 	}
 
 	@Override

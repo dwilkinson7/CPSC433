@@ -23,19 +23,20 @@ public class TreeNode {
 		this.possibleAssigns = new ArrayList<Assignment>();
 	}
 	
-	public TreeNode(Stack<Person> personList, HashSet<Room> roomList)
+	public TreeNode()
 	{
-		TreeNode.people = personList;
-		TreeNode.rooms = roomList;
+		this.assignment = new Assignment(null, null, 0);
+		TreeNode.people = new Stack<Person>();
+		TreeNode.rooms = new HashSet<Room>(OurEnvironment.roomList.values());
 		TreeNode.bestscore = Integer.MIN_VALUE;
 		TreeNode.terminated = false;
+		this.possibleAssigns = new ArrayList<Assignment>();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void processNode()
 	{ 
-		Person current = people.pop();
-		if (current == null)
+		if (people.isEmpty())
 		{
 			if (TreeNode.bestscore < this.assignment.score)
 			{
@@ -46,6 +47,7 @@ public class TreeNode {
 		}
 		else
 		{
+			Person current = people.peek();
 			createAssignments(current);
 			for (Assignment assign : this.possibleAssigns)
 			{
@@ -70,7 +72,7 @@ public class TreeNode {
 					;
 				else
 				{
-					Assignment current = new Assignment(assignedPerson,room);
+					Assignment current = new Assignment(assignedPerson,room, this.assignment.score);
 					evalAssignment(current);
 					this.possibleAssigns.add(current);
 				}
@@ -85,7 +87,7 @@ public class TreeNode {
 		}
 		else
 		{
-			this.possibleAssigns.add(new Assignment(assignedPerson,assignedPerson.getRoom()));
+			this.possibleAssigns.add(new Assignment(assignedPerson,assignedPerson.getRoom(), this.assignment.score));
 		}
 	}
 	
@@ -146,7 +148,7 @@ public class TreeNode {
 		TreeNode.rooms.add(temp.room);
 		temp.person.setRoom(null);
 		temp.room.removePerson(temp.person);
-		;
+		
 	}
 	
 }

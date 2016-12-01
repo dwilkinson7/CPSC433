@@ -419,11 +419,11 @@ public class Constraints
 	public static void constraint11(Assignment assign)
 	{
 		// If they are a smoker and share a room with a no smoker
-		if (assign.person.getSmoker() && assign.room.getAssigned().get(0) != null && !assign.room.getAssigned().get(0).getSmoker())
+		if (assign.person.getSmoker() && assign.room.getAssigned().size() > 0 && !assign.room.getAssigned().get(0).getSmoker())
 			assign.score += -50;
 
 		// IF they are a non smoker and share a room with a smoker
-		else if (!assign.person.getSmoker() && assign.room.getAssigned().get(0) != null && assign.room.getAssigned().get(0).getSmoker())
+		else if (!assign.person.getSmoker() && assign.room.getAssigned().size() > 0 && assign.room.getAssigned().get(0).getSmoker())
 			assign.score += -50;
 	}
 
@@ -454,7 +454,7 @@ public class Constraints
 	public static void constraint13(Assignment assign)
 	{
 		// if they are a secretary or share a room with a secretary
-		if (assign.person.getSecretary() || assign.room.getAssigned().get(0) == null || assign.room.getAssigned().get(0).getSecretary())
+		if (assign.person.getSecretary() || assign.room.getAssigned().size() == 0 || assign.room.getAssigned().get(0).getSecretary())
 			return;
 
 		// if they are a hacker and share a room with non hacker

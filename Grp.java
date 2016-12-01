@@ -16,6 +16,9 @@ public class Grp {
 		this.name = name;
 		this.groupMembers = new HashSet<Person>();
 		this.heads = new HashSet<Person>();
+		this.secretaryList = new HashSet<Person>();
+		this.managerList = new HashSet<Person>();
+		this.largeProjectHeadsList = new HashSet<Person>();
 	}
 	
 	public String getName()

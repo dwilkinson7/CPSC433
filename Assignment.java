@@ -6,10 +6,10 @@ public class Assignment {
 	public Person person;
 	public Room room;
 	
-	public Assignment(Person person, Room room) {
+	public Assignment(Person person, Room room, int prevscore) {
 		this.person = person;
 		this.room = room;
-		this.score = 0;
+		this.score = prevscore;
 	}
 	
 	public void setScore(int score) {
