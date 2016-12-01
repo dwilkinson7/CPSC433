@@ -74,7 +74,8 @@ public class TreeNode {
 				{
 					Assignment current = new Assignment(assignedPerson,room, this.assignment.score);
 					evalAssignment(current);
-					this.possibleAssigns.add(current);
+					if (current.score > TreeNode.bestscore)
+						this.possibleAssigns.add(current);
 				}
 			}
 			Collections.sort(this.possibleAssigns, new Comparator<Assignment>() {
@@ -104,12 +105,12 @@ public class TreeNode {
 		{
 			Constraints.constraint3sec(assign);
 			Constraints.constraint4(assign);
-			Constraints.constraint5(assign);
+			Constraints.constraint5sec(assign);
 			Constraints.constraint9sec(assign);
 		}
-		else if (assign.person.getManager())
+		if (assign.person.getManager())
 		{
-			Constraints.constraint5(assign);
+			Constraints.constraint5manager(assign);
 			Constraints.constraint6manager(assign);
 		}
 		if (assign.person.getProjectHead().size()>0)

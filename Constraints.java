@@ -134,40 +134,43 @@ public class Constraints
 	 *
 	 *
 	 */
-	public static void constraint5(Assignment assign)
+	public static void constraint5sec(Assignment assign)
 	{
 		int value = 0;
 
 		// if the assigned person is a secretary
-		if (assign.person.getSecretary()) {
-			// for each group that the secretary is in
-			for (Grp group : assign.person.getGroupsList()) {
-				// for each manager in that group
-				for (Person head : group.getGroupManagers()) {
-					if (head.getRoom() != null)
-					{
-						// if the head is their own secretary
-						boolean b = false;
-						// for each secretary in the group
-						for (Person secretary : group.getGroupSecretaries()) {
-							// if the secretary is unassigned or close to the manager
-							if (assign.person.equals(secretary))
-							{
-								b = b || head.getRoom().getCloseRooms().contains(assign.room);
-							}
-							else
-								b = b || secretary.getRoom() == null || head.getRoom().getCloseRooms().contains(secretary.getRoom());
+		// for each group that the secretary is in
+		for (Grp group : assign.person.getGroupsList()) {
+			// for each manager in that group
+			for (Person head : group.getGroupManagers()) {
+				if (head.getRoom() != null)
+				{
+					// if the head is their own secretary
+					boolean b = false;
+					// for each secretary in the group
+					for (Person secretary : group.getGroupSecretaries()) {
+						// if the secretary is unassigned or close to the manager
+						if (assign.person.equals(secretary))
+						{
+							b = b || head.getRoom().getCloseRooms().contains(assign.room);
 						}
-
-						if (!b)
-							value += -20;
+						else
+							b = b || secretary.getRoom() == null || head.getRoom().getCloseRooms().contains(secretary.getRoom());
 					}
+
+					if (!b)
+						value += -20;
 				}
 			}
 		}
+		assign.score += value;
+	}
+
+	public static void constraint5manager(Assignment assign)
+	{
+		int value = 0;
 
 		// If the assigned person is a manager
-		if (assign.person.getManager())
 			for (Grp group : assign.person.getGroupsList()) {
 				boolean b = false;
 				// for each secretary in the group

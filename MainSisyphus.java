@@ -21,10 +21,23 @@ public class MainSisyphus extends SisyphusI {
 		return OurEnvironment.get();
 	}
 	
+	@Override
+	protected void doSearch(Environment env, long timeLimit) {
+		;
+	}
+	
+	@Override
+	protected void printResults() {
+		;
+	}
+	
+	
+	
 	public static void main(String[] args) {
 		MainSisyphus ms = new MainSisyphus(args);
 		Timer myTimer = new Timer(true);
-		myTimer.schedule(new TimeLimit(),Integer.parseInt(args[1])); // TODO: change time to arg value
+		long time = (long) (0.9f*Integer.parseInt(args[1]));
+		myTimer.schedule(new TimeLimit(),time); // TODO: change time to arg value
 		doOrTree();
 		PrintWriter pw;
 		try {
@@ -35,9 +48,6 @@ public class MainSisyphus extends SisyphusI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 	
 	private static void doOrTree()
