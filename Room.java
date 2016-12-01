@@ -27,13 +27,13 @@ public class Room {
 	public void assignPerson(Person person)
 	{
 		assigned.add(person);
-		if (person.getManager() == true || assigned.size() == 2)
+		if (person.getManager() == true || person.getProjectHead().size() > 0 || person.getGroupHeadList().size() > 0 || assigned.size() == 2)
 				this.full = true;
 	}
 	public void removePerson(Person person)
 	{
 		assigned.remove(person);
-		if (person.getManager() == true || assigned.size() < 2)
+		if (person.getManager() == true || person.getProjectHead().size() > 0 || person.getGroupHeadList().size() > 0 || assigned.size() < 2)
 			this.full = false;
 	}
 	
