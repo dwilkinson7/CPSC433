@@ -59,6 +59,9 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 			//add new person to the list
 			peopleList.put(p,newPerson);
 		}
+		
+		for (Grp group : peopleList.get(p).getGroupsList())
+			group.addGroupSecretary(peopleList.get(p));
 
 	}
 
@@ -107,6 +110,9 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 			//add new person to the list
 			peopleList.put(p,newPerson);
 		}
+		
+		for (Grp group : peopleList.get(p).getGroupsList())
+			group.addGroupManager(peopleList.get(p));
 
 	}
 
@@ -209,6 +215,18 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 				peopleList.get(p).addGroup(newGroup);
 				groupList.get(grp).addGroupMember(newPerson);
 			}
+		}
+		
+		if (peopleList.get(p).getSecretary())
+			groupList.get(grp).addGroupSecretary(peopleList.get(p));
+		
+		if (peopleList.get(p).getManager())
+			groupList.get(grp).addGroupManager(peopleList.get(p));
+		
+		for (Project prj : peopleList.get(p).getProjectHead())
+		{
+			if (prj.getLarge())
+				groupList.get(grp).addLargeProjectHead(peopleList.get(p));
 		}
 	}
 
@@ -365,6 +383,14 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 				newProject.addProjectHead(newPerson);
 			}
 		}
+		
+		if (projectList.get(prj).getLarge())
+		{
+			for (Grp group : peopleList.get(p).getGroupsList())
+			{
+				group.addLargeProjectHead(peopleList.get(p));
+			}
+		}		
 	}
 
 	@Override
@@ -651,6 +677,14 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 			projectList.put(prj, newProject);
 		}
 		projectList.get(prj).setLarge(true);
+		
+		for (Person person : projectList.get(prj).getProjectHeads())
+		{
+			for (Grp group : person.getGroupsList())
+			{
+				group.addLargeProjectHead(person);
+			}
+		}
 	
 	}
 

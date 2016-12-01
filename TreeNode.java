@@ -41,6 +41,7 @@ public class TreeNode {
 			{
 				TreeNode.bestsolution = (Stack<Assignment>) TreeNode.solution.clone();
 				TreeNode.bestscore = this.assignment.score;
+				System.out.println("New best solution: " + TreeNode.bestscore);
 			}
 		}
 		else
@@ -70,7 +71,7 @@ public class TreeNode {
 				else
 				{
 					Assignment current = new Assignment(assignedPerson,room);
-					evalAssignment(current); // TODO: create eval function
+					evalAssignment(current);
 					this.possibleAssigns.add(current);
 				}
 			}
@@ -90,7 +91,42 @@ public class TreeNode {
 	
 	public void evalAssignment(Assignment assign)
 	{
-		;
+		if (assign.person.getGroupHeadList().size()>0)
+		{
+			Constraints.constraint1(assign);
+			Constraints.constraint3grphead(assign);
+			Constraints.constraint6grphead(assign);
+			Constraints.constraint10grphead(assign);
+		}
+		if (assign.person.getSecretary())
+		{
+			Constraints.constraint3sec(assign);
+			Constraints.constraint4(assign);
+			Constraints.constraint5(assign);
+			Constraints.constraint9sec(assign);
+		}
+		else if (assign.person.getManager())
+		{
+			Constraints.constraint5(assign);
+			Constraints.constraint6manager(assign);
+		}
+		if (assign.person.getProjectHead().size()>0)
+		{
+			Constraints.constraint9largeprj(assign);
+			Constraints.constraint10largeprj(assign);
+		}
+		
+		Constraints.constraint2(assign);
+		Constraints.constraint7(assign);
+		Constraints.constraint8(assign);
+		Constraints.constraint11(assign);
+		Constraints.constraint12(assign);
+		Constraints.constraint13(assign);
+		Constraints.constraint14(assign);
+		Constraints.constraint15(assign);
+		Constraints.constraint16(assign);
+		
+		
 	}
 	
 	public static void pushAssignment(Assignment assign)
