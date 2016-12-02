@@ -43,6 +43,8 @@ public class TreeNode {
 				TreeNode.bestsolution = (Stack<Assignment>) TreeNode.solution.clone();
 				TreeNode.bestscore = this.assignment.score;
 				System.out.println("New best solution: " + TreeNode.bestscore);
+				if (TreeNode.bestscore == 0)
+					TreeNode.terminated = true;
 			}
 		}
 		else
@@ -57,6 +59,7 @@ public class TreeNode {
 				{
 					child.processNode();
 				}
+				
 				TreeNode.popAssignment();
 			}
 		}

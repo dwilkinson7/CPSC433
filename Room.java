@@ -16,6 +16,12 @@ public class Room {
 		size = "medium";
 	}
 	
+	@Override
+	public int hashCode()
+	{
+		return this.getName().hashCode();
+	}
+	
 	public boolean isFull()
 	{
 		return this.full;

@@ -34,10 +34,10 @@ public class MainSisyphus extends SisyphusI {
 	
 	
 	public static void main(String[] args) {
-		MainSisyphus ms = new MainSisyphus(args);
 		Timer myTimer = new Timer(true);
-		long time = (long) (0.9f*Integer.parseInt(args[1]));
-		myTimer.schedule(new TimeLimit(),time); // TODO: change time to arg value
+		long time = (long) (0.95f*Integer.parseInt(args[1]));
+		myTimer.schedule(new TimeLimit(),time);
+		new MainSisyphus(args);
 		doOrTree();
 		PrintWriter pw;
 		try {
@@ -124,16 +124,16 @@ public class MainSisyphus extends SisyphusI {
 		if (!peopleList.isEmpty())
 			System.out.println("Aint got time fo yo scrubs");
 		
+		
 		// Create TreeNode root
 		TreeNode root = new TreeNode();
 		
 		while (!temp.isEmpty())
 		{
-			TreeNode.people.push(temp.pop());
+			TreeNode.people.push(temp.pop());	
 		}
+		
 		root.processNode();
-		
-		
 	}
 	
 	private static void printSolution(PrintWriter pw)
