@@ -1,31 +1,28 @@
-/*
- *
- * We might be able to change the return statements to just directly modifying the given assignment score
- *
+/**
+ * Constraints.java
+ * 
+ * Contains methods for each soft constraint
+ * Used for evaluating the current room assignments and assigning appropriate score
  */
+
 public class Constraints
 {
-	/* group heads should have a large office
-	 *
-	 * Applies to Group Heads only
-	 *
-	 * assign is the assignment of the group head
-	 *
+	/** Constraint 1 method - Group heads should have a large office
+	 *  Applies to Group Heads only
+	 * @param assign - current room assignments
+	 * 
 	 */
 	public static void constraint1(Assignment assign)
 	{
-		// IF the assigned room is not large
+		// If the assigned room is not large
 		if (!assign.room.getRoomSize().equals("large"))
 			assign.score += -40;
 	}
 
 
-	/* group heads should be close to all members of their group
-	 *
+	/**Constraint 2 method - Group heads should be close to all members of their group
 	 * Applies to all members of the group
-	 *
-	 *
-	 *
+	 * @param assign - current room assignments
 	 */
 	public static void constraint2(Assignment assign)
 	{
@@ -54,16 +51,13 @@ public class Constraints
 		assign.score += value;
 	}
 
-	/* group heads should be located close to at least one secretary in the group
-	 * 
+	/**Constraint 3 method (secretaries) - group heads should be located close to at least one secretary in the group
 	 * Applies to group heads and secretaries
-	 *
-	 *
+	 * @param assign - current room assignments
 	 */
 	public static void constraint3sec(Assignment assign)
 	{
 		int value = 0;
-
 
 		// for each group that the secretary is in
 		for (Grp group : assign.person.getGroupsList()) {
@@ -92,6 +86,10 @@ public class Constraints
 		assign.score += value;
 	}
 
+	/**Constraint 3 method (group heads) - group heads should be located close to at least one secretary in the group
+	 * Applies to group heads and secretaries
+	 * @param assign - current room assignments
+	 */
 	public static void constraint3grphead(Assignment assign)
 	{
 		int value = 0;
@@ -112,12 +110,9 @@ public class Constraints
 		assign.score += value;
 	}
 
-	/* secretaries should share offices with other secretaries
-	 *
-	 * Currently set up so that if they share an office it should be with a secretary
-	 *
+	/** Constaint 4 method - Secretaries should share offices with other secretaries
 	 * Applies only to secretaries
-	 *
+	 * @param assign - current room assignments
 	 */
 	public static void constraint4(Assignment assign)
 	{
@@ -126,19 +121,13 @@ public class Constraints
 			assign.score += -5;
 	}
 
-
-	/* managers should be close to at least one secretary in their group
-	 *
-	 * 
-	 *
-	 *
-	 *
+	/** Constaint 5 (secretaries) - Managers should be close to at least one secretary in their group
+	 * Applies to secretaries and managers
+	 * @param assign - current room assignments
 	 */
 	public static void constraint5sec(Assignment assign)
 	{
 		int value = 0;
-
-		// if the assigned person is a secretary
 		// for each group that the secretary is in
 		for (Grp group : assign.person.getGroupsList()) {
 			// for each manager in that group
@@ -166,33 +155,33 @@ public class Constraints
 		assign.score += value;
 	}
 
+	/** Constaint 5 (manager) - Managers should be close to at least one secretary in their group
+	 * Applies to secretaries and managers
+	 * @param assign - current room assignments
+	 */
 	public static void constraint5manager(Assignment assign)
 	{
 		int value = 0;
 
-		// If the assigned person is a manager
-			for (Grp group : assign.person.getGroupsList()) {
-				boolean b = false;
-				// for each secretary in the group
-				for (Person secretary : group.getGroupSecretaries()) {
-					// if the secretary is unassigned or close to the group head
-					b = b || secretary.getRoom() == null || assign.room.getCloseRooms().contains(secretary.getRoom());
-				}
-
-				if (!b)
-					value += -20;
+		// For each group the manager is part of
+		for (Grp group : assign.person.getGroupsList()) {
+			boolean b = false;
+			// for each secretary in the group
+			for (Person secretary : group.getGroupSecretaries()) {
+				// if the secretary is unassigned or close to the manager
+				b = b || secretary.getRoom() == null || assign.room.getCloseRooms().contains(secretary.getRoom());
 			}
+
+			if (!b)
+				value += -20;
+		}
 
 		assign.score += value;
 	}
 
-
-	/* managers should be close to their group's head
-	 *
+	/** Constaint 6 method (manager) - managers should be close to their group's head
 	 * Applies to managers and group heads
-	 *
-	 *
-	 *
+	 * @param assign - current room assignments
 	 */
 	public static void constraint6manager(Assignment assign)
 	{
@@ -210,11 +199,13 @@ public class Constraints
 		assign.score += value;
 	}
 
-
+	/** Constaint 6 method (group heads) - managers should be close to their group's head
+	 * Applies to managers and group heads
+	 * @param assign - current room assignments
+	 */
 	public static void constraint6grphead(Assignment assign)
 	{
 		int value = 0;
-
 		// if they are a group head
 		for (Grp group : assign.person.getGroupHeadList()) {
 			// for each manager in their group
@@ -228,12 +219,9 @@ public class Constraints
 		assign.score += value;
 	}
 
-	/* managers should be close to all members of their group
-	 *
+	/** Constraint 7 method - Managers should be close to all members of their group
 	 * Applies to everybody
-	 *
-	 *
-	 *
+	 * @param assign - current room assignments
 	 */
 	public static void constraint7(Assignment assign)
 	{
@@ -267,17 +255,15 @@ public class Constraints
 	}
 
 
-	/* the heads of projects should be close to all members of their project
-	 *
+	/** Constraint 8 method - The heads of projects should be close to all members of their project
 	 * Applies to everybody
-	 *
-	 *
+	 * @param assign - current room assignments
 	 */
 	public static void constraint8(Assignment assign)
 	{
 		int value = 0;
 
-		// if they are a project head
+		// For each project they are head of
 		for (Project prj : assign.person.getProjectHead()) {
 			// for each person in their project
 			for (Person scrub : prj.getProjectMembers()) {
@@ -300,12 +286,9 @@ public class Constraints
 		assign.score += value;
 	}
 
-	/* the heads of large projects should be close to at least one secretary in their group
-	 *
-	 * applies to large project heads and secretaries
-	 *
-	 *
-	 *
+	/**  Constraint 9 method (secretaries) - The heads of large projects should be close to at least one secretary in their group
+	 * Applies to large project heads and secretaries
+	 * @param assign - current room assignments
 	 */
 	public static void constraint9sec(Assignment assign)
 	{
@@ -338,17 +321,22 @@ public class Constraints
 		assign.score += value;
 	}
 
+	/**  Constraint 9 method (large project heads) - The heads of large projects should be close to at least one secretary in their group
+	 * Applies to large project heads and secretaries
+	 * @param assign - current room assignments
+	 */
 	public static void constraint9largeprj(Assignment assign)
 	{
 		int value = 0;
-
-
-		// If the assigned person is a large project head
+		// For each project they are the head of
 		for (Project prj : assign.person.getProjectHead()) {
+			//if large project
 			if (prj.getLarge())
 			{
+				//for each group they are in
 				for (Grp group : assign.person.getGroupsList())
 				{
+					//if the person is secretary
 					boolean b = assign.person.getSecretary();
 					// for each secretary in the group
 					for (Person secretary : group.getGroupSecretaries()) {
@@ -365,19 +353,16 @@ public class Constraints
 		assign.score += value;
 	}
 
-	/* the heads of large projects should be close to the head of their group
-	 *
-	 * applies to large project heads and group heads
-	 *
-	 *
-	 *
+	/** Constraint 10 (large project heads) - The heads of large projects should be close to the head of their group
+	 * Applies to large project heads and group heads
+	 * @param assign - current room assignment
 	 */
 	public static void constraint10largeprj(Assignment assign)
 	{
 		int value = 0;
-
-		// If they are a large project head
+		// For each project they are head of
 		for (Project prj : assign.person.getProjectHead()) {
+			//if project is large
 			if (prj.getLarge())
 			{
 				// for each group that they are in
@@ -394,10 +379,14 @@ public class Constraints
 		}
 		assign.score += value;
 	}
+
+	/** Constraint 10 (group heads) - The heads of large projects should be close to the head of their group
+	 * Applies to large project heads and group heads
+	 * @param assign - current room assignment
+	 */
 	public static void constraint10grphead(Assignment assign)
 	{
 		int value = 0;
-
 		// if they are a group head
 		for (Grp group : assign.person.getGroupHeadList()) {
 			// for each LPH in their group
@@ -407,17 +396,12 @@ public class Constraints
 					value += -10;
 			}
 		}
-
 		assign.score += value;
 	}
 
-
-	/* a smoker shouldn't share an office with a non-smoker
-	 *
-	 * applies to everyone
-	 *
-	 *
-	 *
+	/** Constraint 11 - A smoker shouldn't share an office with a non-smoker
+	 * Applies to everyone
+	 * @param assing - current room assignment
 	 */
 	public static void constraint11(Assignment assign)
 	{
@@ -430,18 +414,20 @@ public class Constraints
 			assign.score += -50;
 	}
 
-	/* members of the same project should not share an office (encourages synergy between projects)
-	 *
-	 * applies to everyone
+	/** Constraint 12 - Members of the same project should not share an office (encourages synergy between projects)
+	 * Applies to everyone
+	 * @param assing - current room assignment
 	 */
 	public static void constraint12(Assignment assign)
 	{
-		// if they share and room and if the other person is in the same project
+		// if there is someone else in the room
 		if (assign.room.getAssigned().size() != 0)
 		{
 			boolean b = false;
+			//for each project person is in
 			for (Project prj : assign.person.getProjectsList())
 			{
+				//if they share room with someone in the same project
 				b = b || assign.room.getAssigned().get(0).getProjectsList().contains(prj);
 
 			}
@@ -450,9 +436,9 @@ public class Constraints
 		}
 	}
 
-	/* if a non-secretary hacker/non-hacker shares an office, then he/she should share with another hacker/non- hacker
-	 *
-	 * applies to everyone
+	/**Constraint 13 - If a non-secretary hacker/non-hacker shares an office, then he/she should share with another hacker/non- hacker
+	 * Applies to everyone
+	 * @param assing - current room assignment
 	 */
 	public static void constraint13(Assignment assign)
 	{
@@ -469,9 +455,9 @@ public class Constraints
 			assign.score += -2;
 	}
 
-	/* people prefer to have their own offices
-	 *
-	 * applies to everyone
+	/** Constraint 14 - People prefer to have their own offices
+	 * Applies to everyone
+	 * @param assing - current room assignment
 	 */
 	public static void constraint14(Assignment assign)
 	{
@@ -480,9 +466,9 @@ public class Constraints
 			assign.score += -4;
 	}
 
-	/* if two people share an office, they should work together
-	 *
-	 * applies to everyone
+	/** Constraint 15 - If two people share an office, they should work together
+	 * Applies to everyone
+	 * @param assing - current room assignment
 	 */
 	public static void constraint15(Assignment assign)
 	{
@@ -491,9 +477,9 @@ public class Constraints
 			assign.score += -3;
 	}
 
-	/* two people shouldn't share a small room
-	 *
-	 * applies to everyone
+	/** Constraint 16 - Two people shouldn't share a small room
+	 * Applies to everyone
+	 * @param assing - current room assignment
 	 */
 	public static void constraint16(Assignment assign)
 	{
