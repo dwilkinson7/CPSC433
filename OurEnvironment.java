@@ -15,7 +15,9 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 	public static HashMap<String,Grp> groupList = new HashMap<String,Grp>();
 	public static HashMap<String,Project> projectList = new HashMap<String,Project>();
 	public static HashMap<String,Room> roomList = new HashMap<String,Room>();
-	public static HashSet<Person> preAssigned = new HashSet<Person>(); 
+	public static HashSet<Person> preAssigned = new HashSet<Person>();
+	public static HashSet<Person> projectHeadList = new HashSet<Person>();
+	
 	
 	
 	protected OurEnvironment(String name) {
@@ -385,7 +387,7 @@ public class OurEnvironment extends Environment implements SisyphusPredicates {
 				newProject.addProjectHead(newPerson);
 			}
 		}
-		
+		OurEnvironment.projectHeadList.add(peopleList.get(p));
 		if (projectList.get(prj).getLarge())
 		{
 			for (Grp group : peopleList.get(p).getGroupsList())

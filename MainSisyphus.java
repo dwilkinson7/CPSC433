@@ -103,8 +103,10 @@ public class MainSisyphus extends SisyphusI {
 				{
 					temp.push(prjhead);
 					peopleList.remove(prjhead);
+					OurEnvironment.projectHeadList.remove(prjhead);
 				}
 			}
+			/*
 			for (Person leftover : group.getGroupMembers())
 			{
 				if (peopleList.contains(leftover))
@@ -112,17 +114,24 @@ public class MainSisyphus extends SisyphusI {
 					temp.push(leftover);
 					peopleList.remove(leftover);
 				}
-			}
+			}*/
+		}
+		for (Person stalemanager : OurEnvironment.projectHeadList)
+		{
+			temp.push(stalemanager);
+			peopleList.remove(stalemanager);
 		}
 		
 		for (Person staleleftover : peopleList)
 		{
 			temp.push(staleleftover);
-			peopleList.remove(staleleftover);
+			if (staleleftover.getManager() || staleleftover.getProjectHead().size()>0)
+				System.out.println("I'm a leftover manager");
+			//peopleList.remove(staleleftover);
 		}
 		
-		if (!peopleList.isEmpty())
-			System.out.println("Aint got time fo yo scrubs");
+		//if (!peopleList.isEmpty())
+		//	System.out.println("Aint got time fo yo scrubs");
 		
 		
 		// Create TreeNode root
