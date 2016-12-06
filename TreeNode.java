@@ -53,14 +53,17 @@ public class TreeNode {
 			createAssignments(current);
 			for (Assignment assign : this.possibleAssigns)
 			{
-				TreeNode child = new TreeNode(assign);
-				TreeNode.pushAssignment(assign);
+				
 				if (!terminated)
 				{
+					TreeNode child = new TreeNode(assign);
+					TreeNode.pushAssignment(assign);
 					child.processNode();
+					TreeNode.popAssignment();
 				}
+				else
+					return;
 				
-				TreeNode.popAssignment();
 			}
 		}
 	}
@@ -71,6 +74,8 @@ public class TreeNode {
 		{
 			for (Room room : TreeNode.rooms)
 			{
+				if (terminated)
+					return;
 				if ((assignedPerson.getManager() || assignedPerson.getProjectHead().size() > 0 || assignedPerson.getGroupHeadList().size() > 0) && room.getAssigned().size() > 0)
 					;
 				else
@@ -81,6 +86,8 @@ public class TreeNode {
 						this.possibleAssigns.add(current);
 				}
 			}
+			if (terminated)
+				return;
 			Collections.sort(this.possibleAssigns, new Comparator<Assignment>() {
 				@Override 
 				public int compare(Assignment a1, Assignment a2) {
@@ -88,6 +95,22 @@ public class TreeNode {
 				}
 
 			});
+			if ((assignedPerson.getManager() || assignedPerson.getGroupHeadList().size()>0 || assignedPerson.getProjectHead().size()>0) && this.possibleAssigns.size()>1)
+			{
+				int index = 0;
+				while (this.possibleAssigns.size() > index+1 && this.possibleAssigns.get(index).score == this.possibleAssigns.get(index+1).score)
+				{
+					index++;
+				}
+				ArrayList<Assignment> equalRoomAssigns = new ArrayList<Assignment>(this.possibleAssigns.subList(0, index+1));
+				Collections.sort(equalRoomAssigns, new Comparator<Assignment>(){
+					@Override 
+					public int compare(Assignment a1, Assignment a2) {
+						return a2.room.getCloseRooms().size() - a1.room.getCloseRooms().size(); // Descending
+					}
+				});
+				Collections.copy(this.possibleAssigns,equalRoomAssigns);
+			}
 		}
 		else
 		{
