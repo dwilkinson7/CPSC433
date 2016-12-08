@@ -8,8 +8,15 @@ import cpsc433.Pair;
 import cpsc433.Predicate.ParamType;
 import cpsc433.SisyphusPredicates;
 
+
+/**
+ * OurEnvironment class is a subclass of Environment, while fulfilling all required methods
+ * from SisyphusPredicates. Holds the entire people, room, group, project, project head, and
+ * pre-assignment lists. SisyphusPredicates methods fulfill all object updates required.
+ */
 public class OurEnvironment extends Environment implements SisyphusPredicates {
 
+	
 	private static OurEnvironment instance=null;
 	public static HashMap<String,Person> peopleList = new HashMap<String,Person>();
 	public static HashMap<String,Grp> groupList = new HashMap<String,Grp>();
